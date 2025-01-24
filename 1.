@@ -1,0 +1,56 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+data = {
+    "Post ID": [101, 102, 103, 104, 105],
+    "Date": ["2023-12-01", "2023-12-05", "2023-12-10", "2023-12-15", "2023-12-20"],
+    "Likes": [120, 250, 300, 400, 280],
+    "Comments": [15, 30, 40, 50, 25],
+    "Shares": [10, 25, 35, 45, 20],
+    "Followers": [5000, 5200, 5300, 5400, 5500],
+}
+
+followers_growth = {
+    "Date": ["2023-12-01", "2023-12-10", "2023-12-20"],
+    "Followers": [5000, 5300, 5500],
+}
+
+demographics = {
+    "Age Group": ["18-24", "25-34", "35-44", "45-54", "55+"],
+    "Percentage": [40, 35, 15, 7, 3],
+}
+
+df_posts = pd.DataFrame(data)
+df_followers = pd.DataFrame(followers_growth)
+df_demographics = pd.DataFrame(demographics)
+
+df_posts["Engagement Rate (%)"] = (
+    (df_posts["Likes"] + df_posts["Comments"] + df_posts["Shares"]) / df_posts["Followers"]
+) * 100
+
+plt.figure(figsize=(10, 6))
+plt.bar(df_posts["Post ID"], df_posts["Engagement Rate (%)"], color="skyblue")
+plt.title("Engagement Rate per Post")
+plt.xlabel("Post ID")
+plt.ylabel("Engagement Rate (%)")
+plt.show()
+
+plt.figure(figsize=(10, 6))
+plt.plot(df_followers["Date"], df_followers["Followers"], marker="o", color="green")
+plt.title("Follower Growth Over Time")
+plt.xlabel("Date")
+plt.ylabel("Followers")
+plt.grid()
+plt.show()
+
+plt.figure(figsize=(8, 8))
+plt.pie(df_demographics["Percentage"], labels=df_demographics["Age Group"], autopct="%1.1f%%", startangle=140)
+plt.title("Follower Demographics by Age Group")
+plt.show()
+
+top_post = df_posts.loc[df_posts["Engagement Rate (%)"].idxmax()]
+print("=== Insights ===")
+print(f"Top Performing Post: Post ID {top_post['Post ID']} with Engagement Rate of {top_post['Engagement Rate (%)']:.2f}%")
+print(f"Follower Growth: {df_followers['Followers'].iloc[-1] - df_followers['Followers'].iloc[0]} new followers over the last month")
+print("\n=== Demographics ===")
+print(df_demographics)
